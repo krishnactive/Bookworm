@@ -5,6 +5,7 @@ import cors from "cors";
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
+import courseRoute from "./route/course.route.js";
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(express.json());
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 4001;
 const URI = process.env.MongoDBURI;
 
 // connect to mongoDB
@@ -30,6 +31,7 @@ try {
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
+app.use("/course", courseRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
