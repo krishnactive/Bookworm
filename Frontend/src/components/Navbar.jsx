@@ -3,6 +3,8 @@ import { useState } from "react";
 import Login from "./Login";
 import Logout from "./Logout";
 import { useAuth } from "../context/AuthProvider";
+import profile from "./Profile";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [authUser, setAuthUser] = useAuth();
@@ -152,20 +154,30 @@ function Navbar() {
             </label>
 
             {authUser ? (
-              <Logout />
-            ) : (
-              <div className="">
-                <a
-                  className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
-                  onClick={() =>
-                    document.getElementById("my_modal_3").showModal()
-                  }
-                >
-                  Login
-                </a>
-                <Login />
-              </div>
-            )}
+  <div className="flex items-center gap-3">
+    <Logout />
+    <a href="/profile">
+      <img
+        src={authUser?.photoURL || "https://i.pravatar.cc/100"} // fallback image
+        alt="User Avatar"
+        className="w-10 h-10 rounded-full border-2 border-blue-400 hover:ring hover:ring-blue-300 transition"
+      />
+    </a>
+  </div>
+) : (
+  <div>
+    <a
+      className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
+      onClick={() =>
+        document.getElementById("my_modal_3").showModal()
+      }
+    >
+      Login
+    </a>
+    <Login />
+  </div>
+)}
+
           </div>
         </div>
       </div>

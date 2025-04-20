@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Signup from "./components/Signup";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthProvider";
+import Profile from "./components/Profile";
 
 function App() {
   const [authUser, setAuthUser] = useAuth();
@@ -25,8 +26,10 @@ function App() {
             element={authUser ? <Books /> : <Navigate to="/signup" />}
           />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element = {<Profile/>}></Route>
         </Routes>
         <Toaster />
+
       </div>
     </>
   );
