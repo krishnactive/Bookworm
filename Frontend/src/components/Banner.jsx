@@ -1,43 +1,57 @@
 import React from "react";
 import banner from "../../public/Banner.png";
+import logo_se from "../../public/logo_se.png";
 
 function Banner() {
   return (
     <>
-    
-      <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10">
-        <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
-          <div className="space-y-8">
+      <div className="relative">
+      
+        <div
+          className="absolute inset-0 bg-cover bg-center blur-sm brightness-25"
+          style={{ backgroundImage: "url('/bgHome.png')" }}
+        ></div>
+        <div className="relative max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10 text-white">
+          <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
+            <div className="space-y-8">
+            <div  className="bg-white/10 backdrop-blur-md p-4 rounded-xl inline-block" >
             <h1 className="text-2xl md:text-4xl font-bold font-[__Rye_ac85fd, __Rye_Fallback_ac85fd]">
-            THE BOOKS
-            {" "}
-              <span className="text-pink-500">YOU'LL LOVE!!!</span>
+              <span className="animated-gradient-text">
+              Books that inspire. Skills that empower!!!
+              </span>
             </h1>
-            <p className="text-sm md:text-xl font-[__Rye_ac85fd, __Rye_Fallback_ac85fd]">
-            Discover Worlds Unseen, Stories Untold:
-            Embrace the Journey Through Pages of Imagination
-            </p>
-            <label className="input input-bordered flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="w-4 h-4 opacity-70"
-              >
-                <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-                <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-              </svg>
-              <input type="text" className="grow" placeholder="Email" />
-            </label>
+            </div>
+              <p className="text-sm md:text-xl font-[__Rye_ac85fd, __Rye_Fallback_ac85fd]">
+                Journey Through Pages of Imagination —
+                and Master Skills That Make a Difference."
+              </p>
+              <label className="input input-bordered flex items-center gap-2 text-black">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  className="w-4 h-4 opacity-70"
+                >
+                  <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
+                  <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
+                </svg>
+                <input type="text" className="grow" placeholder="Email" />
+              </label>
+            </div>
+            <button className="mt-6 px-6 py-2 rounded-lg text-white font-semibold bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 transition duration-300 shadow-md">
+              Get Started
+            </button>
+
           </div>
-          <button className="btn mt-6 btn-secondary">Get Started</button>
-        </div>
-        <div className=" order-1 w-full mt-20 md:w-1/2">
-          <img
-            src={banner}
-            className="md:w-[550px] md:h-[460px] md:ml-12"
-            alt=""
-          />
+          <div className="order-1 w-full mt-20 md:w-1/2">
+            <img
+              // src={banner}
+              src={logo_se}
+              className="md:w-[550px] md:h-[460px] md:ml-12 select-none"
+              alt=""
+              draggable="false"
+            />
+          </div>
         </div>
       </div>
     </>

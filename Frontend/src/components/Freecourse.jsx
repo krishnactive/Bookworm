@@ -40,7 +40,7 @@ function Home() {
       <div className="text-center mt-10">
         <Link to="/Book">
           <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 duration-300">
-            Explore All Books
+            Explore All Courses
           </button>
         </Link>
       </div>

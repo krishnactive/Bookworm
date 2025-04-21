@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+.animated-gradient-text {
+  @apply bg-gradient-to-r from-pink-500 via-blue-500 to-pink-500 bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient;
+}
+
 
 @tailwind base;
 @tailwind components;

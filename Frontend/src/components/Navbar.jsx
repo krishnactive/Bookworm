@@ -17,10 +17,12 @@ function Navbar() {
       element.classList.add("dark");
       localStorage.setItem("theme", "dark");
       document.body.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
     } else {
       element.classList.remove("dark");
       localStorage.setItem("theme", "light");
       document.body.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
     }
   }, [theme]);
 
@@ -41,13 +43,13 @@ function Navbar() {
   const navItems = (
     <>
       <li>
-        <a href="/">Home</a>
+        <Link to="/">Home</Link>
       </li>
       <li>
-        <a href="/course">Course</a>
+        <Link to="/course">Course</Link>
       </li>
       <li>
-        <a href="/Book">Books</a>
+        <Link to="/Book">Books</Link>
       </li>
       <li>
         <a>Contact</a>
@@ -57,14 +59,53 @@ function Navbar() {
       </li>
     </>
   );
+  const profileItems = (
+    <>
+      <li>
+        <Link to="/profile">Profile</Link>
+      </li>
+      <li>
+        <a>My Courses</a>
+      </li>
+      <li>
+        <a>My Books</a>
+      </li>
+      <li>
+        <a>My Reviews</a>
+      </li>
+      <li>
+        <a>My Wishlist</a>
+      </li>
+      <li>
+        <a>My Orders</a>
+      </li>
+      <li>
+        <a>My Notifications</a>
+      </li>
+      <li>
+        <a>My Coupons</a>
+      </li>
+      <li> 
+        <a>My Gift Cards</a>
+      </li>
+      <li>
+        <a>Settings</a>
+      </li>
+      <li>
+        <Logout/>
+      </li>
+    </>
+  );
   return (
     <>
       <div
         className={`max-w-screen-2xl container mx-auto md:px-20 px-4 dark:bg-slate-800 dark:text-white fixed top-0 left-0 right-0 z-50 ${
           sticky
-            ? "sticky-navbar shadow-md bg-base-200 dark:bg-slate-700 dark:text-white duration-300 transition-all ease-in-out"
+            ? "sticky-navbar shadow-md transition-all ease-in-out"
             : ""
-        }`}
+        }
+            ${theme == "dark"? "bg-slate-800 text-white" : "bg-white text-black"} 
+         `}
         style={{ fontFamily: "__Rye_ac85fd, __Rye_Fallback_ac85fd" }}
       >
         <div className="navbar">
@@ -92,7 +133,7 @@ function Navbar() {
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 dark:bg-slate-800 dark:text-white rounded-box w-52"
               >
                 {navItems}
               </ul>
@@ -155,14 +196,20 @@ function Navbar() {
 
             {authUser ? (
   <div className="flex items-center gap-3">
-    <Logout />
-    <a href="/profile">
-      <img
-        src={authUser?.photoURL || "https://i.pravatar.cc/100"} // fallback image
-        alt="User Avatar"
-        className="w-10 h-10 rounded-full border-2 border-blue-400 hover:ring hover:ring-blue-300 transition"
-      />
-    </a>
+    {/* <Logout /> */}
+    <div className = "dropdown dropdown-hover dropdown-end">
+        <div tabIndex = {0} role = "button" className="btn btn-ghost btn-circle avatar">
+          <div className="w-10 rounded-full ring ring-blue-400 hover:ring-blue-300 transition">
+            <img src={authUser?.photoURL || "https:/i.pravatar.cc/100"}/>
+          </div>
+        </div>
+        <ul
+        tabIndex={0}
+        className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 dark:bg-slate-700 rounded-box w-52"
+        >
+          {profileItems}
+        </ul>
+    </div>
   </div>
 ) : (
   <div>

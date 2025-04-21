@@ -22,14 +22,15 @@ function Logout() {
     }
   };
   return (
-    <div>
+    // <div>
       <button
-        className="px-3 py-2 bg-red-500 text-white rounded-md cursor-pointer"
+        // className="px-3 py-2 bg-red-500 text-white rounded-md cursor-pointer"
+        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-600"
         onClick={handleLogout}
       >
         Logout
       </button>
-    </div>
+    // </div>
   );
 }
 
