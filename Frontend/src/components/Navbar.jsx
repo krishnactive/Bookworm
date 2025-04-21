@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthProvider";
 import profile from "./Profile";
 import { Link } from "react-router-dom";
 import { FiShoppingCart } from "react-icons/fi";
+import logo from "../assets/logo_se.png";
 
 function Navbar() {
   const [authUser, setAuthUser] = useAuth();
@@ -139,7 +140,10 @@ function Navbar() {
                 {navItems}
               </ul>
             </div>
-            <a className=" text-2xl font-bold cursor-pointer">BOOKWORM</a>
+            <a className=" text-2xl font-bold cursor-pointer">SkillGain</a>
+            {/* <a className="cursor-pointer">
+            <img src={logo} alt="BOOKWORM Logo" className="h-12 w-auto" />
+            </a> */}
           </div>
           <div className="navbar-end space-x-3">
             <div className="navbar-center hidden lg:flex">
