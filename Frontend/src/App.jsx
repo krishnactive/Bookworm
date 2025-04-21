@@ -8,6 +8,7 @@ import Signup from "./components/Signup";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthProvider";
 import Profile from "./components/Profile";
+import Cart from "./components/Cart";
 
 function App() {
   const [authUser, setAuthUser] = useAuth();
@@ -27,6 +28,8 @@ function App() {
           />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element = {<Profile/>}></Route>
+          <Route path="/cart" element = {<Cart/>}></Route>
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         <Toaster />
 

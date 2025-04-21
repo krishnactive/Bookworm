@@ -16,9 +16,12 @@ function Home() {
   return (
     <>
       <Navbar />
+      
       <Banner />
+      <div className="pt-1 min-h-screen">
       <Toggle showFreeBooks={showFreeBooks} handleToggle={handleToggle} />
       {showFreeBooks ? <Freebook /> : <Freecourse />}
+      </div>
       <Footer />
     </>
   );

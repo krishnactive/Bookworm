@@ -5,13 +5,13 @@ import logo_se from "../../public/logo_se.png";
 function Banner() {
   return (
     <>
-      <div className="relative">
+      <div className="relative pt-30 overflow-hidden">
       
         <div
           className="absolute inset-0 bg-cover bg-center blur-sm brightness-25"
           style={{ backgroundImage: "url('/bgHome.png')" }}
         ></div>
-        <div className="relative max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10 text-white">
+        <div className="relative pt-24 max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10 text-white">
           <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
             <div className="space-y-8">
             <div  className="bg-white/10 backdrop-blur-md p-4 rounded-xl inline-block" >

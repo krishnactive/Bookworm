@@ -5,6 +5,7 @@ import Logout from "./Logout";
 import { useAuth } from "../context/AuthProvider";
 import profile from "./Profile";
 import { Link } from "react-router-dom";
+import { FiShoppingCart } from "react-icons/fi";
 
 function Navbar() {
   const [authUser, setAuthUser] = useAuth();
@@ -196,6 +197,14 @@ function Navbar() {
 
             {authUser ? (
   <div className="flex items-center gap-3">
+    {/* Cart Icon */}
+  <Link to="/cart" className="relative">
+    <FiShoppingCart className="text-2xl hover:text-blue-500 transition" />
+    {/* Optional: Cart count badge */}
+    {/* <span className="absolute -top-2 -right-2 text-xs bg-red-600 text-white rounded-full px-1">3</span> */}
+  </Link>
+  
+
     {/* <Logout /> */}
     <div className = "dropdown dropdown-hover dropdown-end">
         <div tabIndex = {0} role = "button" className="btn btn-ghost btn-circle avatar">

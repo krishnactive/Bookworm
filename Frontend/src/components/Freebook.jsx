@@ -21,7 +21,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 mt-28">
+    <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 pt-1 min-h-screen">
       <div className="text-center">
         <h1 className="text-2xl md:text-4xl font-semibold">
           Browse Our <span className="text-green-500">Free Books</span>

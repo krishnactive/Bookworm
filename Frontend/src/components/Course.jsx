@@ -30,18 +30,18 @@ function Course() {
 
   return (
     <div className="max-w-screen-2xl container mx-auto md:px-20 px-4">
-      <div className="mt-28 text-center">
+      <div className="mt-20 text-center">
         <h1 className="text-2xl md:text-4xl font-semibold">
         Turn Knowledge into Power with Our  <span className="text-pink-500">Courses</span>
         </h1>
         <p className="mt-6 text-gray-600">
           Discover expertly curated courses crafted to elevate your skills.
         </p>
-        <Link to="/">
+        {/* <Link to="/">
           <button className="mt-6 bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-700 duration-300">
             Back
           </button>
-        </Link>
+        </Link> */}
       </div>
 
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
