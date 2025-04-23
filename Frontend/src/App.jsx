@@ -16,6 +16,8 @@ function App() {
   return (
     <>
       <div className="dark:bg-slate-900 dark:text-white">
+        <Navbar />
+        {/* <div className="pt-1 min-h-screen"> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -27,8 +29,8 @@ function App() {
             element={authUser ? <Books /> : <Navigate to="/signup" />}
           />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element = {<Profile/>}></Route>
-          <Route path="/cart" element = {<Cart/>}></Route>
+          <Route path="/profile" element = {<Profile/>}/>
+          <Route path="/cart" element = {<Cart/>}/>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         <Toaster />

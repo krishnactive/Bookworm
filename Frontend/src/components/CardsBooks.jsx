@@ -1,9 +1,37 @@
 import React from "react";
 import { FaPlus } from "react-icons/fa";
+import axios from "axios";
+import AuthProvider, { useAuth } from "../context/AuthProvider";
 
 function Cards({ item, course }) {
+  const [authUser] = useAuth();
   const data = item || course;
-
+  const handleClick = async() =>{
+    // console.log("Add to Cart clicked");
+    const itemType = item ? "books" : "courses";
+    const userId = authUser?._id;
+    // Log to verify userId and item data
+    console.log("userId:", userId);
+    console.log("Item Type:", itemType);
+    console.log("Item Data:", data);
+    
+    if (!userId) {
+      console.log("User ID is not found in localStorage");
+      alert("Please log in first");
+      return;
+    }
+    try{
+      const res = await axios.post("http://localhost:4001/user/cart/add", {
+        userId,
+        itemId: data._id,
+        itemType,
+      });
+      console.log("data received",res.data);
+    }
+    catch(error){
+      console.log("error",error);
+    }
+  }
   if (!data) return null;
 
   return (
@@ -36,6 +64,7 @@ function Cards({ item, course }) {
               {/* Add to Cart Button with Tooltip */}
               <div className="tooltip" data-tip="Add to Cart">
                 <button
+                  onClick = {()=>handleClick()}
                   className="p-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200"
                 >
                   <FaPlus size={12} />

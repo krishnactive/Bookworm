@@ -46,7 +46,7 @@ export default function ProfilePage() {
           <Header title="Personal Information" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <Input value={authUser?.firstName} placeholder="First Name" />
+            <Input value={authUser?.fullname} placeholder="First Name" />
             <Input value={authUser?.lastName} placeholder="Last Name" />
           </div>
 

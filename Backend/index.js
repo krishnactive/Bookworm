@@ -7,6 +7,7 @@ import cors from "cors";
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
 import courseRoute from "./route/course.route.js";
+import cartRoute from "./route/cart.route.js";
 
 const app = express();
 
@@ -15,24 +16,29 @@ app.use(express.json());
 
 
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4000;
 const URI = process.env.MongoDBURI;
 
 // connect to mongoDB
-try {
-    mongoose.connect(URI, {
+const connectDB = async () => {
+    try {
+      await mongoose.connect(URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    });
-    console.log("Connected to mongoDB");
-} catch (error) {
-    console.log("Error: ", error);
-}
+      });
+      console.log("Connected to MongoDB");
+    } catch (error) {
+      console.error("MongoDB connection error:", error);
+      process.exit(1);
+    }
+  };
+connectDB();
 
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 app.use("/course", courseRoute);
+app.use("/user/cart", cartRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

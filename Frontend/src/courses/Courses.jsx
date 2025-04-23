@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 function Courses() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="pt-1 min-h-screen">
         <Course />
       </div>

@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       
       <Banner />
       <div className="pt-1 min-h-screen">

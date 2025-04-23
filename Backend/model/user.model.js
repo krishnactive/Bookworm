@@ -1,21 +1,5 @@
 import mongoose from "mongoose";
-
-const cartItemSchema = new mongoose.Schema({
-  itemId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    refPath: "cart.itemType" // dynamic reference to either Book or Course
-  },
-  itemType: {
-    type: String,
-    required: true,
-    enum: ["books", "Course"] // matches your collection/model names
-  },
-  quantity: {
-    type: Number,
-    default: 1
-  },
-});
+import CartItem from "./cart.model.js"; // Import the CartItem schema
 
 const userSchema = new mongoose.Schema({
   fullname: {
@@ -31,7 +15,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  cart: [cartItemSchema], // <-- New field to store cart items
+  cart: [CartItem.schema], // Referencing CartItem schema
 });
 
 const User = mongoose.model("User", userSchema);
