@@ -28,8 +28,12 @@ function Signup() {
     console.log("user data",res.data);
     if (res.data) {
       toast.success("Signup Successful");
-      setAuthUser(res.data.user);
+      localStorage.setItem("Users", JSON.stringify(res.data.user));
+      const authData = { ...res.data.user, token: res.data.token };
+      setAuthUser(authData);
+      // setAuthUser(res.data.user);
       navigate(from, { replace: true });
+      navigate("/");
     }
   } catch (err) {
     if (err.response) {

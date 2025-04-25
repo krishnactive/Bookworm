@@ -10,6 +10,7 @@ function Cards({ item, course }) {
     // console.log("Add to Cart clicked");
     const itemType = item ? "books" : "courses";
     const userId = authUser?._id;
+    console.log("adfd" ,data._id);
     // Log to verify userId and item data
     console.log("userId:", userId);
     console.log("Item Type:", itemType);

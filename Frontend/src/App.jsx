@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthProvider";
 import Profile from "./components/Profile";
 import Cart from "./components/Cart";
-
+import { Outlet } from "react-router-dom";
 function App() {
   const [authUser, setAuthUser] = useAuth();
   console.log(authUser);
@@ -17,6 +17,7 @@ function App() {
     <>
       <div className="dark:bg-slate-900 dark:text-white">
         <Navbar />
+        <Outlet/>
         {/* <div className="pt-1 min-h-screen"> */}
         <Routes>
           <Route path="/" element={<Home />} />

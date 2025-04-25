@@ -1,8 +1,9 @@
 import User from "../model/user.model.js";
 import Cart from "../model/cart.model.js";
 import Book from "../model/book.model.js";
+// import Course from "../model/course.model.js";
 import mongoose from "mongoose";
-
+import authMiddleware from "../middleware/authMiddleware.js";
 // Add item to cart
 export const addToCart = async (req, res) => {
   const { userId, itemId, itemType } = req.body;
@@ -40,16 +41,15 @@ export const addToCart = async (req, res) => {
 
 // Remove item from cart
 export const removeFromCart = async (req, res) => {
-  const { userId, itemId, itemType } = req.body; // or req.params depending on route setup
+  const { userId, itemId, itemType } = req.body; // Ensure this comes from body or params
 
   try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Make sure itemType is passed and correctly checked
     user.cart = user.cart.filter(
-      (item) =>
-        item.itemId.toString() !== itemId ||
-        item.itemType !== itemType
+      (item) => item.itemId.toString() !== itemId || item.itemType !== itemType
     );
     await user.save();
 
@@ -61,23 +61,36 @@ export const removeFromCart = async (req, res) => {
 };
 
 
-// Fetch cart
+
 export const fetchCart = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const user = await User.findById(userId).populate({
-      path: "cart.itemId",
-      model: (doc) => doc.itemType, // dynamic model
-    });
-
+    //Find the user
+    const user = await User.findById(userId);
+    
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json({ cart: user.cart });
+    //Populate the cart based on itemType
+    const populatedCart = await Promise.all(
+      user.cart.map(async (cartItem) => {
+        if (cartItem.itemType === "books") {
+          const book = await Book.findById(cartItem.itemId);
+          return { ...cartItem.toObject(), itemId: book };  // Attach populated book to the cartItem
+        } else if (cartItem.itemType === "courses") {
+          const course = await Course.findById(cartItem.itemId);
+          return { ...cartItem.toObject(), item: course };  // Attach populated course to the cartItem
+        }
+        return cartItem;  // Return cartItem as is if itemType doesn't match
+      })
+    );
+
+    res.status(200).json({ cart: populatedCart });
   } catch (error) {
     console.error("Error fetching cart:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 

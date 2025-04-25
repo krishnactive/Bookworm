@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
 
   //  Update localStorage whenever authUser changes
   useEffect(() => {
-    if (authUser && typeof authUser === "object" && authUser._id) {
+    if (authUser && typeof authUser === "object" && authUser._id && authUser.token)  {
       // Save valid user
       localStorage.setItem("Users", JSON.stringify(authUser));
     } else if (authUser === null) {

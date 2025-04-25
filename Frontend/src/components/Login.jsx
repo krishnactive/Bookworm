@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useAuth } from "../context/AuthProvider";
 function Login() {
-  // const {setUser} = useAuth();
+  const [authUser, setAuthUser] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -20,17 +21,20 @@ function Login() {
 
     try {
       const res = await axios.post("http://localhost:4001/user/login", userInfo);
-      console.log("user data",res.data);
+      console.log("user data login pg",res.data);
       if (res.data) {
         toast.success("Logged in Successfully");
         localStorage.setItem("Users", JSON.stringify(res.data.user));
         // localStorage.serItem("userId", res.data.user._id);
-        // setUser(res.data.user);
+        const authData = { ...res.data.user, token: res.data.token };
+        setAuthUser(authData);
+        // setAuthUser(res.data.user);
         document.getElementById("my_modal_3").close();
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        // navigate("/");
+        navigate(from, { replace: true });
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
+        navigate("/");
       }
     } catch (err) {
       if (err.response) {

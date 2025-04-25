@@ -4,7 +4,7 @@ export default function ProfilePage() {
   const [authUser] = useAuth();
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+    <div className="flex min-h-screen pt-20 bg-gray-100 dark:bg-gray-900 transition-colors">
       {/* Sidebar */}
       <aside className="w-72 bg-white dark:bg-gray-800 p-5 shadow-sm border-r border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3 mb-6">

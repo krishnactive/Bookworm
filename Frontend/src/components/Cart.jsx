@@ -6,12 +6,15 @@ import axios from "axios";
 
 function Cart() {
   const [cart, setCart] = useState([]);
-  const [authUser] = useAuth();
+  const [authUser, setAuthUser] = useAuth();
 
   useEffect(() => {
     const fetchCart = async () => {
+      console.log(authUser.token);
+      console.log(authUser);
       if (!authUser?._id || !authUser?.token) return;
       try {
+        
         const res = await axios.get("http://localhost:4001/user/cart/show", {
           headers: {
             Authorization: `Bearer ${authUser.token}`,
@@ -28,11 +31,12 @@ function Cart() {
   const handleRemove = async (itemId) => {
     try {
       await axios.delete(`http://localhost:4001/user/${authUser._id}/cart/${itemId}`);
-      setCart((prev) => prev.filter((item) => item.itemId._id !== itemId));
+      setCart((prev) => prev.filter((item) => item.itemId.toString() !== itemId));
     } catch (err) {
       console.error("Error removing item:", err);
     }
   };
+  
 
   const total = cart.reduce((sum, item) => sum + (item.itemId?.price || 0), 0).toFixed(2);
 
@@ -58,7 +62,7 @@ function Cart() {
                   <div>
                     <h2 className="text-lg font-semibold">{item.itemId?.title}</h2>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                      {item.itemId?.author}
+                      {item.itemId?.name}
                     </p>
                     <p className="text-green-600 dark:text-green-400 font-medium">
                       ${item.itemId?.price}
