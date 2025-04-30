@@ -9,7 +9,7 @@ function Home() {
   useEffect(() => {
     const fetchFreeBooks = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/course");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/course`);
         const filtered = res.data.filter((course) => course.price === 0);
         setFreeBooks(filtered);
       } catch (err) {

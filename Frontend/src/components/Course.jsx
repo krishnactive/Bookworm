@@ -11,7 +11,7 @@ function Course() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/course");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/course`);
         console.log("Fetched courses: ", res.data);
         setCourses(res.data);
       } catch (err) {

@@ -15,7 +15,7 @@ function Cart() {
       if (!authUser?._id || !authUser?.token) return;
       try {
         
-        const res = await axios.get("http://localhost:4001/user/cart/show", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/cart/show`, {
           headers: {
             Authorization: `Bearer ${authUser.token}`,
           },
@@ -30,7 +30,7 @@ function Cart() {
 
   const handleRemove = async (itemId) => {
     try {
-      await axios.delete(`http://localhost:4001/user/${authUser._id}/cart/${itemId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/user/${authUser._id}/cart/${itemId}`);
       setCart((prev) => prev.filter((item) => item.itemId.toString() !== itemId));
     } catch (err) {
       console.error("Error removing item:", err);
