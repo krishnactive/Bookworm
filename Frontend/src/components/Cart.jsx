@@ -28,14 +28,32 @@ function Cart() {
     fetchCart();
   }, [authUser]);
 
-  const handleRemove = async (itemId) => {
+  const handleRemove = async (itemId, itemType) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/user/${authUser._id}/cart/${itemId}`);
-      setCart((prev) => prev.filter((item) => item.itemId.toString() !== itemId));
+      await axios.post(`${import.meta.env.VITE_API_URL}/user/cart/remove`, 
+        {
+          userId: authUser._id,
+          itemId,
+          itemType,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authUser.token}`,
+          },
+        }
+      );
+      
+      setCart((prev) =>
+        prev.filter(
+          (item) =>
+            item.itemId._id !== itemId || item.itemType !== itemType
+        )
+      );
     } catch (err) {
       console.error("Error removing item:", err);
     }
   };
+  
   
 
   const total = cart.reduce((sum, item) => sum + (item.itemId?.price || 0), 0).toFixed(2);
@@ -70,7 +88,7 @@ function Cart() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleRemove(item.itemId?._id)}
+                  onClick={() => handleRemove(item.itemId?._id, item.itemType)}
                   className="text-red-500 hover:text-red-700"
                   title="Remove from cart"
                 >

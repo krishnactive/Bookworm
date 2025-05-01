@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import  protect  from "../middleware/authMiddleware.js  ";
+import protect from "../middleware/authMiddleware.js";
 
 import {
   addToCart,
@@ -9,7 +9,7 @@ import {
 } from "../controller/cart.controller.js";
 
 router.post("/add", addToCart);
-router.delete("/:userId/cart/:itemId", removeFromCart);
-router.get("/show",protect, fetchCart);
+router.get("/show", protect, fetchCart);
+router.post("/remove", protect, removeFromCart);
 
 export default router;
