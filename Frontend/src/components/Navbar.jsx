@@ -1,19 +1,34 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useRef,useState } from "react";
+import { useAuth } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
+import {
+  FiShoppingCart, FiSearch, FiUser, FiBook, FiHeart,
+  FiSettings, FiLogOut, FiBell, FiGift, FiStar, FiShoppingBag
+} from "react-icons/fi";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
 import Login from "./Login";
 import Logout from "./Logout";
-import { useAuth } from "../context/AuthProvider";
-import profile from "./Profile";
-import { Link } from "react-router-dom";
-import { FiShoppingCart } from "react-icons/fi";
-import logo from "../assets/logo_se.png";
+import { Moon, Sun } from "lucide-react";
 
 function Navbar() {
   const [authUser, setAuthUser] = useAuth();
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
-  );
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [sticky, setSticky] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const element = document.documentElement;
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   useEffect(() => {
     if (theme === "dark") {
       element.classList.add("dark");
@@ -28,220 +43,155 @@ function Navbar() {
     }
   }, [theme]);
 
-  const [sticky, setSticky] = useState(false);
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setSticky(true);
-      } else {
-        setSticky(false);
-      }
-    };
+    const handleScroll = () => setSticky(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const navItems = (
     <>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/course">Course</Link>
-      </li>
-      <li>
-        <Link to="/Book">Books</Link>
-      </li>
-      <li>
-        <a>Contact</a>
-      </li>
-      <li>
-        <a>About</a>
-      </li>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/course">Course</Link></li>
+      <li><Link to="/Book">Books</Link></li>
+      <li><a>Contact</a></li>
+      <li><a>About</a></li>
     </>
   );
-  const profileItems = (
-    <>
-      <li>
-        <Link to="/profile">Profile</Link>
-      </li>
-      <li>
-        <a>My Courses</a>
-      </li>
-      <li>
-        <a>My Books</a>
-      </li>
-      <li>
-        <a>My Reviews</a>
-      </li>
-      <li>
-        <a>My Wishlist</a>
-      </li>
-      <li>
-        <a>My Orders</a>
-      </li>
-      <li>
-        <a>My Notifications</a>
-      </li>
-      <li>
-        <a>My Coupons</a>
-      </li>
-      <li> 
-        <a>My Gift Cards</a>
-      </li>
-      <li>
-        <a>Settings</a>
-      </li>
-      <li>
-        <Logout/>
-      </li>
-    </>
-  );
+
   return (
-    <>
-      <div
-        className={`max-w-screen-2xl container mx-auto md:px-20 px-4 dark:bg-slate-800 dark:text-white fixed top-0 left-0 right-0 z-50 ${
-          sticky
-            ? "sticky-navbar shadow-md transition-all ease-in-out"
-            : ""
-        }
-            ${theme == "dark"? "bg-slate-800 text-white" : "bg-white text-black"} 
-         `}
-        style={{ fontFamily: "__Rye_ac85fd, __Rye_Fallback_ac85fd" }}
-      >
-        <div className="navbar">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost lg:hidden"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h8m-8 6h16"
-                  />
-                </svg>
-              </div>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 dark:bg-slate-800 dark:text-white rounded-box w-52"
-              >
-                {navItems}
-              </ul>
-            </div>
-            <a className=" text-2xl font-bold cursor-pointer">SkillGain</a>
-            {/* <a className="cursor-pointer">
-            <img src={logo} alt="BOOKWORM Logo" className="h-12 w-auto" />
-            </a> */}
+    <div className={`max-w-screen-2xl container mx-auto md:px-20 px-4 fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${sticky ? "shadow-md" : ""} ${theme === "dark" ? "bg-slate-800 text-white" : "bg-white text-black"}`}>
+      <div className="flex items-center justify-between py-3">
+        
+        {/* Left: Logo + Mobile Menu */}
+        <div className="flex items-center gap-3">
+          <div className="dropdown lg:hidden">
+            <button
+              tabIndex={0}
+              className="p-2 rounded-lg backdrop-blur-md bg-white/30 dark:bg-slate-700/40 hover:bg-white/50 dark:hover:bg-slate-600/60 transition"
+            >
+              <HiOutlineMenuAlt3 className="text-2xl" />
+            </button>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 dark:bg-slate-800 dark:text-white rounded-box w-52"
+            >
+              {navItems}
+            </ul>
           </div>
-          <div className="navbar-end space-x-3">
-            <div className="navbar-center hidden lg:flex">
-              <ul className="menu menu-horizontal px-1">{navItems}</ul>
-            </div>
-            <div className="hidden md:block">
-              <label className="px-3 py-2 border rounded-md flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow outline-none rounded-md px-1 dark:bg-slate-900 dark:text-white"
-                  placeholder="Search"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </label>
-            </div>
-            <label className="swap swap-rotate">
-              {/* this hidden checkbox controls the state */}
-              <input
-                type="checkbox"
-                className="theme-controller"
-                value="synthwave"
-              />
-
-              {/* sun icon */}
-              <svg
-                className="swap-off fill-current w-7 h-7"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
-              </svg>
-
-              {/* moon icon */}
-              <svg
-                className="swap-on fill-current w-7 h-7"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              >
-                             <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
-              </svg>
-            </label>
-{/* check if logged in or not with authUser */}
-            {authUser ? (
-  <div className="flex items-center gap-3">
-    {/* Cart Icon */}
-  <Link to="/cart" className="relative">
-    <FiShoppingCart className="text-2xl hover:text-blue-500 transition" />
-    {/* Optional: Cart count badge */}
-    {/* <span className="absolute -top-2 -right-2 text-xs bg-red-600 text-white rounded-full px-1">3</span> */}
-  </Link>
-  
-
-    {/* <Logout /> */}
-    <div className = "dropdown dropdown-hover dropdown-end">
-        <div tabIndex = {0} role = "button" className="btn btn-ghost btn-circle avatar">
-          <div className="w-10 rounded-full ring ring-blue-400 hover:ring-blue-300 transition">
-            <img src={authUser?.photoURL || "https:/i.pravatar.cc/100"}/>
-          </div>
+          <Link to="/" className="text-2xl font-bold">
+            <span className="text-[#347DFA] dark:text-blue-400">Skill</span>
+            <span className="text-gray-800 dark:text-white">Gain</span>
+          </Link>
         </div>
-        <ul
-        tabIndex={0}
-        className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 dark:bg-slate-700 rounded-box w-52"
-        >
-          {profileItems}
-        </ul>
-    </div>
-  </div>
-) : (
-  <div>
-    <a
-      className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
-      onClick={() =>
-        document.getElementById("my_modal_3").showModal()
-      }
-    >
-      Login
-    </a>
-    <Login />
-  </div>
-)}
 
+        {/* Middle: Desktop Navigation */}
+        <div className="hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">{navItems}</ul>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-4">
+          {/* Search */}
+          <div className="hidden md:block">
+            <label className="px-3 py-2 border rounded-md flex items-center gap-2">
+              <input
+                type="text"
+                className="grow outline-none rounded-md px-1 dark:bg-slate-900 dark:text-white"
+                placeholder="Search"
+              />
+              <FiSearch className="text-lg opacity-70" />
+            </label>
           </div>
+          <div className="block md:hidden">
+            <FiSearch className="text-2xl hover:text-blue-500 cursor-pointer" />
+          </div>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            className="text-xl"
+          >
+            {theme === "dark" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+          </button>
+
+          {/* Cart and Profile */}
+          {authUser ? (
+            <div className="flex items-center gap-3">
+              <Link to="/cart" className="relative">
+                <FiShoppingCart className="text-2xl hover:text-blue-500 transition" />
+              </Link>
+
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(prev => !prev)}
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-10 rounded-full ring ring-blue-400 hover:ring-blue-300 transition">
+                    <img
+                      src={authUser?.photoURL || "https://i.pravatar.cc/100"}
+                      alt="avatar"
+                    />
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-64 z-50 bg-white/80 dark:bg-slate-800/90 backdrop-blur-md shadow-xl border border-gray-200 dark:border-slate-700 rounded-xl p-3 space-y-2"
+                    >
+                      <DropdownLink to="/profile" icon={<FiUser />}>Profile</DropdownLink>
+                      <DropdownLink to="/my-courses" icon={<FiBook />}>My Courses</DropdownLink>
+                      <DropdownLink to="/my-books" icon={<FiBook />}>My Books</DropdownLink>
+                      <DropdownLink to="/my-reviews" icon={<FiStar />}>My Reviews</DropdownLink>
+                      <DropdownLink to="/my-wishlist" icon={<FiHeart />}>My Wishlist</DropdownLink>
+                      <DropdownLink to="/my-orders" icon={<FiShoppingBag />}>My Orders</DropdownLink>
+                      <DropdownLink to="/notifications" icon={<FiBell />}>Notifications</DropdownLink>
+                      <DropdownLink to="/coupons" icon={<FiGift />}>Coupons</DropdownLink>
+                      <DropdownLink to="/gift-cards" icon={<FiGift />}>Gift Cards</DropdownLink>
+                      <DropdownLink to="/settings" icon={<FiSettings />}>Settings</DropdownLink>
+                      <div className="border-t border-gray-300 dark:border-gray-600 pt-2">
+                        <li className="flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-100 dark:hover:bg-red-900 rounded-md cursor-pointer transition">
+                          <FiLogOut /> <Logout />
+                        </li>
+                      </div>
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300"
+                onClick={() => document.getElementById("my_modal_3").showModal()}
+              >
+                Login
+              </button>
+              <Login />
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
+  );
+}
+
+// Dropdown Link Item Component
+function DropdownLink({ to, icon, children }) {
+  return (
+    <li>
+      <Link
+        to={to}
+        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-800 dark:text-white hover:bg-blue-100 dark:hover:bg-slate-600 rounded-md transition"
+      >
+        {icon} {children}
+      </Link>
+    </li>
   );
 }
 

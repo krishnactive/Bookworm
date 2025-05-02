@@ -6,17 +6,34 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lastName: {
+    type: String,
+    default: "",
+  },
   email: {
     type: String,
     required: true,
     unique: true,
+  },
+  phone: {
+    type: String,
+    default: "",
+  },
+  gender: {
+    type: String,
+    enum: ["Male", "Female", "Other", ""],
+    default: "",
+  },
+  profile: {
+    type: String,
+    default: "", // URL to profile picture
   },
   password: {
     type: String,
     required: true,
   },
   cart: [CartItem.schema], // Referencing CartItem schema
-});
+}, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
 export default User;

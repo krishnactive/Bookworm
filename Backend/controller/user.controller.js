@@ -1,7 +1,6 @@
 import User from "../model/user.model.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-
 // Signup controller
 export const signup = async (req, res) => {
   try {
@@ -71,7 +70,14 @@ export const login = async (req, res) => {
       user: {
         _id: user._id,
         fullname: user.fullname,
+        lastName: user.lastName,
         email: user.email,
+        phone: user.phone,
+        gender: user.gender,
+        profile: user.profile,
+        cart: user.cart,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
       token,
     });
@@ -80,3 +86,31 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const updateProfile = async (req, res) => {
+  const { fullname, lastName, gender, email, phone } = req.body;
+  const userId = req.user._id; // safer and accurate
+
+  const updates = {};
+  if (fullname !== undefined) updates.fullname = fullname;
+  if (lastName !== undefined) updates.lastName = lastName;
+  if (gender !== undefined) updates.gender = gender;
+  if (email !== undefined) updates.email = email;
+  if (phone !== undefined) updates.phone = phone;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
