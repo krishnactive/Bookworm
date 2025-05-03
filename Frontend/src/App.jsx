@@ -13,7 +13,7 @@ import About from "./components/AboutUs"
 import Contact from "./components/Contact"
 import AddressPage from "./components/Address";
 import OrderHistory from "./components/OrderHistory"
-import MyBooks from "./components/Mybooks";
+import MyBooks from "./components/MyBooks";
 import MyCourses from "./components/MyCourses";
 import MyReviews from "./components/ReviewPage";
 import NotificationPage from "./components/Notifications";
