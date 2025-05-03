@@ -1,38 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import axios from "axios";
-import AuthProvider, { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom"; // Import navigate
 
 function Cards({ item, course }) {
   const [authUser] = useAuth();
+  const [addedToCart, setAddedToCart] = useState(false); // Track if item is added to cart
+  const navigate = useNavigate(); // Use navigate hook
   const data = item || course;
-  const handleClick = async() =>{
-    // console.log("Add to Cart clicked");
+
+  const handleClick = async (isBuyNow = false) => {
     const itemType = item ? "books" : "courses";
     const userId = authUser?._id;
-    console.log("adfd" ,data._id);
-    // Log to verify userId and item data
+
     console.log("userId:", userId);
     console.log("Item Type:", itemType);
     console.log("Item Data:", data);
-    
+
     if (!userId) {
       console.log("User ID is not found in localStorage");
       alert("Please log in first");
       return;
     }
-    try{
+
+    try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/cart/add`, {
         userId,
         itemId: data._id,
         itemType,
       });
-      console.log("data received",res.data);
+
+      console.log("Data received:", res.data);
+
+      // Set the addedToCart state to true once the item is added
+      setAddedToCart(true);
+
+      if (isBuyNow) {
+        // Redirect to the cart page after adding item when "Buy Now" is clicked
+        navigate("/cart");
+      }
+    } catch (error) {
+      console.log("Error:", error);
     }
-    catch(error){
-      console.log("error",error);
-    }
-  }
+  };
+
   if (!data) return null;
 
   return (
@@ -65,14 +77,18 @@ function Cards({ item, course }) {
               {/* Add to Cart Button with Tooltip */}
               <div className="tooltip" data-tip="Add to Cart">
                 <button
-                  onClick = {()=>handleClick()}
-                  className="p-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200"
+                  onClick={() => handleClick()} // Calls handleClick for "Add to Cart"
+                  className={`p-2 rounded-full border ${addedToCart ? "bg-green-500 text-white" : "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"} transition duration-200`}
+                  disabled={addedToCart} // Disable the button after item is added
                 >
-                  <FaPlus size={12} />
+                  {addedToCart ? "Added" : <FaPlus size={12} />}
                 </button>
               </div>
               {/* Buy Now Button */}
-              <button className="px-4 py-1 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200">
+              <button
+                onClick={() => handleClick(true)} // Pass `true` to trigger Buy Now
+                className="px-4 py-1 rounded-md border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200"
+              >
                 Buy Now
               </button>
             </div>
@@ -84,3 +100,4 @@ function Cards({ item, course }) {
 }
 
 export default Cards;
+//make changes in schema for showing added after refreah also

@@ -6,7 +6,7 @@ import {useDropzone} from "react-dropzone";
 function Account() {
   return (
     <div>
-      
+      this is account
     </div>
   )
 }

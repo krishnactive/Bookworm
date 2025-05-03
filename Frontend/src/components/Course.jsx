@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Cards from "./Cards";
+import { motion } from "framer-motion";
 
 function Course() {
   const [courses, setCourses] = useState([]);
@@ -30,9 +31,15 @@ function Course() {
 
   return (
     <div className="max-w-screen-2xl container mx-auto md:px-20 px-4">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
       <div className="mt-20 text-center">
         <h1 className="text-2xl md:text-4xl font-semibold">
-        Turn Knowledge into Power with Our  <span className="text-pink-500">Courses</span>
+        Turn Knowledge into Power with Our  <span className="text-[#347DFA]">Courses</span>
         </h1>
         <p className="mt-6 text-gray-600">
           Discover expertly curated courses crafted to elevate your skills.
@@ -43,6 +50,7 @@ function Course() {
           </button>
         </Link> */}
       </div>
+      </motion.div>
 
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 

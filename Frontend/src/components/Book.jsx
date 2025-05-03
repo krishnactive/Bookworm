@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import Cards from "./CardsBooks";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaBookOpen } from "react-icons/fa";
+
 function Book() {
   const [book, setBook] = useState([]);
+
   useEffect(() => {
     const getBook = async () => {
       try {
@@ -16,30 +20,44 @@ function Book() {
     };
     getBook();
   }, []);
+
   return (
-    <>
-      <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4">
-        <div className="mt-20 items-center justify-center text-center">
-          <h1 className="text-2xl  md:text-4xl">
-            We're delighted to have you{" "}
-            <span className="text-pink-500"> Here! :</span>
+    <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 py-20">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="flex justify-center items-center gap-2 mb-4">
+          <FaBookOpen className="text-[#347DFA] text-4xl" />
+          <h1 className="text-3xl md:text-5xl font-bold text-[#347DFA]">
+            Welcome to the SkillGain Library
           </h1>
-          <p className="mt-2  text-gray-600">
-            Explore our extensive collection of books, tailored to suit every reader's taste.
-          </p>
-          {/* <Link to="/">
-            <button className="mt-6 bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-700 duration-300">
-              Back
-            </button>
-          </Link> */}
         </div>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-4 ">
-          {book.map((item) => (
-            <Cards key={item.id} item={item} />
-          ))}
-        </div>
-      </div>
-    </>
+        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+          Explore our extensive collection of books, curated for curious minds and avid readers.
+        </p>
+
+        {/* Optional back button */}
+        {/* <Link to="/">
+          <button className="mt-6 bg-[#347DFA] text-white px-5 py-2 rounded-md hover:bg-blue-700 transition">
+            Back to Home
+          </button>
+        </Link> */}
+      </motion.div>
+
+      <motion.div
+        className="mt-12 grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      >
+        {book.map((item) => (
+          <Cards key={item._id} item={item} />
+        ))}
+      </motion.div>
+    </div>
   );
 }
 

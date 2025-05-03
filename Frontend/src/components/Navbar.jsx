@@ -54,8 +54,8 @@ function Navbar() {
       <li><Link to="/">Home</Link></li>
       <li><Link to="/course">Course</Link></li>
       <li><Link to="/Book">Books</Link></li>
-      <li><a>Contact</a></li>
-      <li><a>About</a></li>
+      <li><Link to="/contact">Contacts</Link></li>
+      <li><Link to="/about">About</Link></li>
     </>
   );
 
@@ -149,7 +149,7 @@ function Navbar() {
                       <DropdownLink to="/my-books" icon={<FiBook />}>My Books</DropdownLink>
                       <DropdownLink to="/my-reviews" icon={<FiStar />}>My Reviews</DropdownLink>
                       <DropdownLink to="/my-wishlist" icon={<FiHeart />}>My Wishlist</DropdownLink>
-                      <DropdownLink to="/my-orders" icon={<FiShoppingBag />}>My Orders</DropdownLink>
+                      <DropdownLink to="/order_history" icon={<FiShoppingBag />}>My Orders</DropdownLink>
                       <DropdownLink to="/notifications" icon={<FiBell />}>Notifications</DropdownLink>
                       <DropdownLink to="/coupons" icon={<FiGift />}>Coupons</DropdownLink>
                       <DropdownLink to="/gift-cards" icon={<FiGift />}>Gift Cards</DropdownLink>

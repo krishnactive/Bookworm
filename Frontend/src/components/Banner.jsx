@@ -15,11 +15,11 @@ function Banner() {
           <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-36">
             <div className="space-y-8">
             <div  className="bg-white/10 backdrop-blur-md p-4 rounded-xl inline-block" >
-            <h1 className="text-2xl md:text-4xl font-bold font-[__Rye_ac85fd, __Rye_Fallback_ac85fd]">
-              <span className="animated-gradient-text">
-              Books that inspire. Skills that empower!!!
-              </span>
-            </h1>
+            <h1 className="text-3xl md:text-5xl font-extrabold font-[__Rye_ac85fd, __Rye_Fallback_ac85fd] leading-tight">
+                <span className="animated-gradient-text">
+                  Books that inspire. Skills that empower!!!
+                </span>
+              </h1>
             </div>
               <p className="text-sm md:text-xl font-[__Rye_ac85fd, __Rye_Fallback_ac85fd]">
                 Journey Through Pages of Imagination —

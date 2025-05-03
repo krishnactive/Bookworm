@@ -9,6 +9,8 @@ import userRoute from "./route/user.route.js";
 import courseRoute from "./route/course.route.js";
 import cartRoute from "./route/cart.route.js";
 import paymentRoute from "./route/payment.route.js"
+import contactRoutes from "./route/contact.route.js";
+// import addressRoutes from "./route/address.route.js"
 const app = express();
 
 app.use(cors());
@@ -40,6 +42,8 @@ app.use("/user", userRoute);
 app.use("/course", courseRoute);
 app.use("/user/cart", cartRoute);
 app.use("/payment", paymentRoute);
+app.use("/api", contactRoutes);
+// app.use('/api', addressRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

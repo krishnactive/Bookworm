@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
   const [authUser, setAuthUser] = useAuth();
-
+  const navigate = useNavigate();  
   const {
     register,
     handleSubmit,

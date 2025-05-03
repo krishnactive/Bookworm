@@ -1,9 +1,11 @@
 import { useAuth } from "../context/AuthProvider";
 import { useState } from "react";
 import { FiSettings } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
-  const [authUser, setAuthUser] = useAuth(); // Ensure you can update user state
+  const [authUser, setAuthUser] = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     fullname: authUser?.fullname || "",
@@ -13,7 +15,7 @@ export default function ProfilePage() {
     phone: authUser?.phone || "",
   });
 
-  const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile sidebar toggle
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,13 +55,18 @@ export default function ProfilePage() {
     }
   };
 
+  const navigate = useNavigate();
+  const handleBackToHome = () => {
+    navigate("/");
+  };
+
   return (
     <div className="flex min-h-screen pt-20 bg-gray-100 dark:bg-gray-900 transition-colors">
-      {/* Mobile Gear Toggle Below Navbar */}
+      {/* Mobile Settings Toggle */}
       <div className="sm:hidden fixed top-16 left-4 z-50">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-2xl text-[#347DFA] dark:text-blue-400 bg-white dark:bg-gray-800 p-2 rounded-full shadow"
+          className="text-2xl text-white bg-[#347DFA] dark:bg-blue-500 p-2 rounded-full shadow"
         >
           <FiSettings />
         </button>
@@ -67,41 +74,52 @@ export default function ProfilePage() {
 
       {/* Sidebar */}
       <aside
-        className={`sm:static absolute z-40 w-full sm:w-72 bg-white dark:bg-gray-800 p-5 shadow-md border-t sm:border-r border-gray-200 dark:border-gray-700 transition-all duration-300
+        className={`sm:static absolute z-40 w-full sm:w-72 bg-gradient-to-b from-[#347DFA] to-blue-600 text-white dark:from-gray-800 dark:to-gray-900 p-5 shadow-xl rounded-r-xl transition-all duration-300
           ${sidebarOpen ? "top-20" : "-top-[1000px]"} sm:top-0`}
       >
-        <div className="flex items-center space-x-3 mb-6">
+        <div className="flex items-center space-x-3 mb-8">
           <img
             src={authUser?.profile || "https://i.pravatar.cc/100"}
             alt="Profile"
-            className="w-12 h-12 rounded-full"
+            className="w-12 h-12 rounded-full border-2 border-white shadow"
           />
           <div>
-            <p className="text-gray-500 dark:text-gray-300 text-sm">Hello,</p>
-            <h2 className="text-lg font-semibold text-[#347DFA] dark:text-blue-400">
-              {authUser?.fullname || "User"}
-            </h2>
+            <p className="text-sm opacity-80">Welcome,</p>
+            <h2 className="text-lg font-bold">{authUser?.fullname || "User"}</h2>
           </div>
         </div>
 
-        <nav className="space-y-3 text-sm">
+        <nav className="space-y-4 text-sm font-medium">
           <Section title="My Orders">
-            <NavLink text="Orders" />
+            <NavLink text="Orders" icon="📦" link="order_history" />
           </Section>
           <Section title="Account Settings">
-            <NavLink text="Profile Information" active />
-            <NavLink text="Manage Addresses" />
-            <NavLink text="PAN Card Information" />
+            <NavLink text="Profile Information" icon="👤" active />
+            <NavLink text="Manage Addresses" icon="🏠" link="/addresses"/>
+            <NavLink text="PAN Card Information" icon="🧾" />
           </Section>
           <Section title="Payments">
-            <NavLink text="Gift Cards" extra={<span className="text-emerald-500 font-bold">₹0</span>} />
-            <NavLink text="Saved UPI" />
-            <NavLink text="Saved Cards" />
+            <NavLink
+              text="Gift Cards"
+              icon="🎁"
+              extra={<span className="text-emerald-300 font-bold">₹0</span>}
+            />
+            <NavLink text="Saved UPI" icon="📱" />
+            <NavLink text="Saved Cards" icon="💳" />
           </Section>
         </nav>
+
+        <div className="mt-10 border-t border-white/20 pt-4">
+      <button
+        onClick={handleBackToHome}
+        className="w-full text-left text-sm text-white opacity-70 hover:opacity-100 transition"
+      >
+        🏠 Back to Home
+      </button>
+    </div>
       </aside>
 
-      {/* Backdrop when sidebar is open */}
+      {/* Backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black opacity-50 z-30"
@@ -161,26 +179,32 @@ export default function ProfilePage() {
   );
 }
 
+// Reusable components
+
 function Section({ title, children }) {
   return (
-    <>
-      <div className="text-gray-400 dark:text-gray-500 uppercase font-semibold tracking-wider mb-1 mt-5">
+    <div>
+      <div className="text-xs uppercase tracking-wider text-white/60 mb-2 mt-6">
         {title}
       </div>
-      {children}
-    </>
+      <div className="space-y-1">{children}</div>
+    </div>
   );
 }
 
-function NavLink({ text, active = false, extra }) {
-  const baseStyle = "block hover:text-[#347DFA] dark:hover:text-blue-400";
+function NavLink({ text, icon, active = false, extra, link = "#" }) {
+  const baseStyle = "flex items-center justify-between px-2 py-2 rounded transition";
   const activeStyle = active
-    ? "text-[#347DFA] dark:text-blue-400 font-semibold"
-    : "text-gray-700 dark:text-gray-200";
+    ? "bg-white/20 text-white font-semibold"
+    : "hover:bg-white/10 text-white";
   return (
-    <a href="#" className={`${baseStyle} ${activeStyle}`}>
-      {text} {extra}
-    </a>
+    <Link to={link} className={`${baseStyle} ${activeStyle}`}>
+      <div className="flex items-center gap-2">
+        {icon && <span>{icon}</span>}
+        <span>{text}</span>
+      </div>
+      {extra}
+    </Link>
   );
 }
 
@@ -202,9 +226,7 @@ function Input({ name, value, onChange, disabled, placeholder }) {
 function InfoField({ label, name, value, onChange, disabled }) {
   return (
     <div className="mb-6">
-      <div className="flex justify-between items-center">
-        <label className="block text-sm mb-1 text-gray-600 dark:text-gray-300">{label}</label>
-      </div>
+      <label className="block text-sm mb-1 text-gray-600 dark:text-gray-300">{label}</label>
       <input
         type="text"
         name={name}
