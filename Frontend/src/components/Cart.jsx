@@ -152,7 +152,7 @@ function Cart() {
             </p>
             <button
               to="/checkout"
-              onClick={handleCheckout}
+              // onClick={handleCheckout}
               className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md text-lg font-medium shadow transition"
             >
               Proceed to Checkout
