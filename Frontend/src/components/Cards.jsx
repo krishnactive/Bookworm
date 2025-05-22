@@ -2,7 +2,37 @@ import React from "react";
 import { FaPlus } from "react-icons/fa"; // Make sure react-icons is installed
 
 function Cards({ item, course }) {
-  const data = item||course;
+  const data = item ?? course;
+
+  const addToCart = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/user/cart/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // if you're using auth
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem("userId"), // or get from context
+        itemId: data._id,
+        itemType: item ? "books" : "courses",
+      }),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("Added to cart!");
+    } else {
+      alert(result.message || "Error adding to cart");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong.");
+  }
+};
+
+
+
 
   if (!data) return null;
 
@@ -32,7 +62,9 @@ function Cards({ item, course }) {
               </button>
               <button 
                title="Add to Cart"
+                onClick={addToCart}
                className="p-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200">
+               
                 <FaPlus size={12} />
               </button>
             </div>

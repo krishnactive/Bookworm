@@ -1,7 +1,7 @@
 import User from "../model/user.model.js";
 import Cart from "../model/cart.model.js";
 import Book from "../model/book.model.js";
-// import Course from "../model/course.model.js";
+import Course from "../model/course.model.js";
 import mongoose from "mongoose";
 import authMiddleware from "../middleware/authMiddleware.js";
 // Add item to cart
@@ -80,17 +80,18 @@ export const fetchCart = async (req, res) => {
 
     //Populate the cart based on itemType
     const populatedCart = await Promise.all(
-      user.cart.map(async (cartItem) => {
-        if (cartItem.itemType === "books") {
-          const book = await Book.findById(cartItem.itemId);
-          return { ...cartItem.toObject(), itemId: book };  // Attach populated book to the cartItem
-        } else if (cartItem.itemType === "courses") {
-          const course = await course.findById(cartItem.itemId);
-          return { ...cartItem.toObject(), item: course };  // Attach populated course to the cartItem
-        }
-        return cartItem;  // Return cartItem as is if itemType doesn't match
-      })
-    );
+  user.cart.map(async (cartItem) => {
+    let populatedItem = null;
+
+    if (cartItem.itemType === "books") {
+      populatedItem = await Book.findById(cartItem.itemId);
+    } else if (cartItem.itemType === "courses") {
+      populatedItem = await Course.findById(cartItem.itemId);
+    }
+
+    return { ...cartItem.toObject(), itemId: populatedItem }; // Consistent key
+  })
+);
 
     res.status(200).json({ cart: populatedCart });
   } catch (error) {

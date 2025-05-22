@@ -9,7 +9,7 @@ const cartItemSchema = new mongoose.Schema({
   itemType: {
     type: String,
     required: true,
-    enum: ["books", "course"] // matches your collection/model names
+    enum: ["books", "courses"] // matches your collection/model names
   },
   quantity: {
     type: Number,
