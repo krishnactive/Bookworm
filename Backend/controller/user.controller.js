@@ -113,4 +113,15 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+// GET /user/my-books
+export const getMyBooks = async (req, res) => {
+  const user = await User.findById(req.user.id).populate("myBooks");
+  res.json(user.myBooks);
+};
+
+// GET /user/my-courses
+export const getMyCourses = async (req, res) => {
+  const user = await User.findById(req.user.id).populate("myCourses");
+  res.json(user.myCourses);
+};
 

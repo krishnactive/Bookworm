@@ -53,47 +53,68 @@ function Cart() {
       console.error("Error removing item:", err);
     }
   };
+  // const handleCheckout = async () => {
+  //   try {
+  //     const res = await fetch(`${import.meta.env.VITE_API_URL}/payment/create-order`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ amount: total }), // total is in rupees
+  //     });
+  
+  //     const order = await res.json();
+  
+  //     const options = {
+  //       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+  //       amount: order.amount,
+  //       currency: "INR",
+  //       name: "kk",
+  //       description: "Order Payment",
+  //       image: "",
+  //       order_id: order.id,
+  //       handler: async function (response) {
+  //         console.log("Payment Success:", response);
+  //         alert("Payment Successful!");
+  //       },
+  //       prefill: {
+  //         name: authUser.fullname,
+  //         email: authUser.email,
+  //         contact: authUser.phone,
+  //       },
+  //       theme: {
+  //         color: "#347DFA",
+  //       },
+  //     };
+  
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+  //   } catch (err) {
+  //     console.error("Payment error:", err);
+  //   }
+  // };
   const handleCheckout = async () => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/payment/create-order`, {
-        method: "POST",
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/user/checkout`,
+      {
+        userId: authUser._id,
+      },
+      {
         headers: {
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${authUser.token}`,
         },
-        body: JSON.stringify({ amount: total }), // total is in rupees
-      });
-  
-      const order = await res.json();
-  
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: "INR",
-        name: "kk",
-        description: "Order Payment",
-        image: "",
-        order_id: order.id,
-        handler: async function (response) {
-          console.log("Payment Success:", response);
-          alert("Payment Successful!");
-        },
-        prefill: {
-          name: authUser.fullname,
-          email: authUser.email,
-          contact: authUser.phone,
-        },
-        theme: {
-          color: "#347DFA",
-        },
-      };
-  
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Payment error:", err);
-    }
-  };
-  
+      }
+    );
+
+    alert("Checkout successful! Items added to your library.");
+    setCart([]); // Clear the cart
+  } catch (err) {
+    console.error("Checkout failed:", err);
+    alert("Failed to complete checkout.");
+  }
+};
+
 
   const total = cart.reduce((sum, item) => sum + (item.itemId?.price || 0),0).toFixed(2);
 
@@ -152,7 +173,7 @@ function Cart() {
             </p>
             <button
               to="/checkout"
-              // onClick={handleCheckout}
+              onClick={handleCheckout}
               className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md text-lg font-medium shadow transition"
             >
               Proceed to Checkout

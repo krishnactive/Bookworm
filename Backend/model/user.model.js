@@ -33,6 +33,18 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   cart: [CartItem.schema], // Referencing CartItem schema
+  myBooks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "books",
+    }
+  ],
+  myCourses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "courses",
+    }
+  ]
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
