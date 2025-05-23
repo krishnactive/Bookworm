@@ -1,6 +1,8 @@
 import { useAuth } from "../context/AuthProvider";
 import { useState } from "react";
 import { FiSettings } from "react-icons/fi";
+import { MdOutlineInventory2, MdOutlineCreditCard } from "react-icons/md";
+import { FaUserAlt, FaGift, FaMobileAlt, FaHome, FaFileInvoice } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -91,32 +93,33 @@ export default function ProfilePage() {
 
         <nav className="space-y-4 text-sm font-medium">
           <Section title="My Orders">
-            <NavLink text="Orders" icon="📦" link="order_history" />
+            <NavLink text="Orders" icon={<MdOutlineInventory2 />} link="/order_history" />
           </Section>
           <Section title="Account Settings">
-            <NavLink text="Profile Information" icon="👤" active />
-            <NavLink text="Manage Addresses" icon="🏠" link="/addresses"/>
-            <NavLink text="PAN Card Information" icon="🧾" />
+            <NavLink text="Profile Information" icon={<FaUserAlt />} active />
+            <NavLink text="Manage Addresses" icon={<FaHome />} link="/addresses" />
+            <NavLink text="PAN Card Information" icon={<FaFileInvoice />} link="/pan-info" />
           </Section>
           <Section title="Payments">
             <NavLink
               text="Gift Cards"
-              icon="🎁"
+              icon={<FaGift />}
               extra={<span className="text-emerald-300 font-bold">₹0</span>}
+              link="/gift-cards"
             />
-            <NavLink text="Saved UPI" icon="📱" />
-            <NavLink text="Saved Cards" icon="💳" />
+            <NavLink text="Saved UPI" icon={<FaMobileAlt />} link="/saved-upi" />
+            <NavLink text="Saved Cards" icon={<MdOutlineCreditCard />} link="/saved-cards" />
           </Section>
         </nav>
 
         <div className="mt-10 border-t border-white/20 pt-4">
-      <button
-        onClick={handleBackToHome}
-        className="w-full text-left text-sm text-white opacity-70 hover:opacity-100 transition"
-      >
-        🏠 Back to Home
-      </button>
-    </div>
+          <button
+            onClick={handleBackToHome}
+            className="w-full text-left text-sm text-white opacity-70 hover:opacity-100 transition"
+          >
+            🏠 Back to Home
+          </button>
+        </div>
       </aside>
 
       {/* Backdrop */}
@@ -200,7 +203,7 @@ function NavLink({ text, icon, active = false, extra, link = "#" }) {
   return (
     <Link to={link} className={`${baseStyle} ${activeStyle}`}>
       <div className="flex items-center gap-2">
-        {icon && <span>{icon}</span>}
+        {icon && <span className="text-lg">{icon}</span>}
         <span>{text}</span>
       </div>
       {extra}

@@ -21,6 +21,9 @@ import GiftCard from "./components/GiftCards";
 import Coupons from "./components/Coupons";
 import Settings from "./components/Setting"
 import { Outlet } from "react-router-dom";
+import SavedUpi from "./components/SavedUpi";
+import SavedCards from "./components/SavedCards";
+import PanInfo from "./components/PanInfo";
 function App() {
   const [authUser, setAuthUser] = useAuth();
   console.log(authUser);
@@ -55,6 +58,10 @@ function App() {
           <Route path="/gift-cards" element={<GiftCard/>}></Route>
           <Route path="/coupons" element={<Coupons/>}></Route>
           <Route path="/settings" element={<Settings/>}></Route>
+          <Route path="/saved-upi" element={<SavedUpi/>} ></Route>
+          <Route path="/saved-cards" element={<SavedCards/>} ></Route>
+          <Route path="/pan-info" element={<PanInfo/>} ></Route>
+
         </Routes>
         <Toaster />
 
