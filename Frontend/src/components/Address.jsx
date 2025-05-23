@@ -1,83 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
-import { FaTrash, FaEdit } from "react-icons/fa";
 
 export default function AddressPage() {
-  const [authUser, setAuthUser] = useAuth();
-  const [addresses, setAddresses] = useState(authUser?.addresses || []);
+  const [authUser] = useAuth();
+  const [addresses, setAddresses] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(null);
 
+  useEffect(() => {
+    if (!authUser?.token) return;
+    fetch(`${import.meta.env.VITE_API_URL}/api/user/address`, {
+      headers: { Authorization: `Bearer ${authUser.token}` },
+    })
+      .then(res => res.json())
+      .then(data => setAddresses(data || []))
+      .catch(console.error);
+  }, [authUser]);
+
   const handleEdit = (address) => {
-    setIsEditing(true);
     setCurrentAddress(address);
+    setIsEditing(true);
   };
 
-  const handleDelete = async (addressId) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/address/${addressId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authUser?.token}`,
-        },
-      });
+  const handleDelete = async (id) => {
+    if (!authUser?.token) return;
 
-      if (!response.ok) {
-        throw new Error("Failed to delete address.");
-      }
-      setAddresses(addresses.filter(address => address._id !== addressId));
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/address/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${authUser.token}` },
+      });
+      if (!res.ok) throw new Error("Delete failed");
+
+      setAddresses(addresses.filter(addr => addr._id !== id));
     } catch (error) {
-      console.error("Error deleting address:", error);
+      console.error(error);
     }
   };
 
   const handleSave = async () => {
-    const token = authUser?.token;
-    if (!token) {
-      console.error("No token found.");
+    if (!authUser?.token || !currentAddress) return;
+
+    const { street, city, state, zipCode } = currentAddress;
+    if (!street?.trim() || !city?.trim() || !state?.trim() || !zipCode?.trim()) {
+      alert("All fields are required.");
       return;
     }
-  
+
     try {
-      const method = isEditing ? "PUT" : "POST";
-      const url = isEditing
+      const method = currentAddress._id ? "PUT" : "POST";
+      const url = currentAddress._id
         ? `${import.meta.env.VITE_API_URL}/api/user/address/${currentAddress._id}`
         : `${import.meta.env.VITE_API_URL}/api/user/address`;
-  
-        const body = { ...currentAddress };
 
-  
-      const response = await fetch(url, {
+      const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authUser.token}`,
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(currentAddress),
       });
-  
-      if (!response.ok) {
-        throw new Error("Failed to save address.");
-      }
-  
-      const result = await response.json();
-      if (isEditing) {
-        setAddresses(addresses.map((address) =>
-          address._id === currentAddress._id ? result : address
-        ));
+
+      if (!res.ok) throw new Error("Save failed");
+
+      const data = await res.json();
+
+      if (method === "POST") {
+        setAddresses([...addresses, data[data.length - 1]]); // Add the last new address
       } else {
-        setAddresses([...addresses, result]);
+        setAddresses(addresses.map(addr => (addr._id === data._id ? data : addr)));
       }
-  
-      setIsEditing(false);
+
       setCurrentAddress(null);
+      setIsEditing(false);
     } catch (error) {
-      console.error("Error saving address:", error);
+      console.error(error);
     }
   };
-  
-  
+
   return (
     <div className="flex min-h-screen pt-20 bg-gray-100 dark:bg-gray-900">
       <main className="flex-1 p-8">
@@ -85,7 +86,10 @@ export default function AddressPage() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-[#347DFA] dark:text-blue-400">Manage Addresses</h2>
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setCurrentAddress({ street: "", city: "", state: "", zipCode: "" });
+                setIsEditing(true);
+              }}
               className="text-[#347DFA] dark:text-blue-400 hover:underline text-sm"
             >
               Add New Address
@@ -104,13 +108,10 @@ export default function AddressPage() {
                   <p className="text-sm text-gray-800 dark:text-white">{address.zipCode}</p>
                   <div className="flex justify-end gap-2 mt-3">
                     <button onClick={() => handleEdit(address)} className="text-blue-500 hover:text-blue-700">
-                      <FaEdit size={14} />
+                      Edit
                     </button>
-                    <button
-                      onClick={() => handleDelete(address._id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <FaTrash size={14} />
+                    <button onClick={() => handleDelete(address._id)} className="text-red-500 hover:text-red-700">
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -118,53 +119,40 @@ export default function AddressPage() {
             </div>
           )}
 
-          {isEditing && (
+          {isEditing && currentAddress && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-[#347DFA] dark:text-blue-400 mb-4">
-                {currentAddress ? "Edit Address" : "Add Address"}
+                {currentAddress._id ? "Edit Address" : "Add Address"}
               </h3>
               <form onSubmit={(e) => e.preventDefault()}>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 dark:text-gray-300">Street</label>
-                  <input
-                    type="text"
-                    value={currentAddress?.street || ""}
-                    onChange={(e) => setCurrentAddress({ ...currentAddress, street: e.target.value })}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 dark:text-gray-300">City</label>
-                  <input
-                    type="text"
-                    value={currentAddress?.city || ""}
-                    onChange={(e) => setCurrentAddress({ ...currentAddress, city: e.target.value })}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 dark:text-gray-300">State</label>
-                  <input
-                    type="text"
-                    value={currentAddress?.state || ""}
-                    onChange={(e) => setCurrentAddress({ ...currentAddress, state: e.target.value })}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-600 dark:text-gray-300">Zip Code</label>
-                  <input
-                    type="text"
-                    value={currentAddress?.zipCode || ""}
-                    onChange={(e) => setCurrentAddress({ ...currentAddress, zipCode: e.target.value })}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded w-full"
-                  />
-                </div>
+                {["street", "city", "state", "zipCode"].map((field) => (
+                  <div className="mb-4" key={field}>
+                    <label className="block text-sm text-gray-600 dark:text-gray-300 capitalize">{field}</label>
+                    <input
+                      type="text"
+                      value={currentAddress?.[field] || ""}
+                      onChange={(e) =>
+                        setCurrentAddress((prev) => ({ ...prev, [field]: e.target.value }))
+                      }
+                      className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded w-full"
+                    />
+                  </div>
+                ))}
                 <button
                   onClick={handleSave}
                   className="bg-blue-500 text-white py-2 px-6 rounded-md mt-4"
                 >
-                  {currentAddress ? "Save Changes" : "Add Address"}
+                  Save Address
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setCurrentAddress(null);
+                  }}
+                  className="ml-2 py-2 px-6 rounded-md border border-gray-400 dark:border-gray-600"
+                >
+                  Cancel
                 </button>
               </form>
             </div>

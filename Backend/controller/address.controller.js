@@ -1,67 +1,80 @@
-const Address = require('../model/address.model');
+import User from "../model/user.model.js";
 
-exports.createOrUpdateAddress = async (req, res) => {
-    const { street, city, state, zipCode } = req.body;
-    const userId = req.user._id;
-  
-    try {
-      const existingAddress = await Address.findOne({ userId });
-      if (existingAddress) {
-        existingAddress.street = street;
-        existingAddress.city = city;
-        existingAddress.state = state;
-        existingAddress.zipCode = zipCode;
-  
-        const updatedAddress = await existingAddress.save();
-        return res.status(200).json(updatedAddress);
-      }
-  
-      const newAddress = new Address({
-        street,
-        city,
-        state,
-        zipCode,
-        userId,
-      });
-  
-      const savedAddress = await newAddress.save();
-      return res.status(201).json(savedAddress);
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Server Error', error: err.message });
-    }
-  };
-  
-
-exports.updateAddress = async (req, res) => {
+// Create a new address
+export const createAddress = async (req, res) => {
+  const userId = req.user._id;
   const { street, city, state, zipCode } = req.body;
-  const addressId = req.params.id;
 
   try {
-    const updatedAddress = await Address.findByIdAndUpdate(
-      addressId,
-      { street, city, state, zipCode },
-      { new: true }
-    );
-    if (!updatedAddress) {
-      return res.status(404).json({ message: 'Address not found' });
-    }
-    return res.status(200).json(updatedAddress);
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.address.push({ street, city, state, zipCode });
+    await user.save();
+
+    res.status(201).json(user.address);
   } catch (err) {
-    return res.status(500).json({ message: 'Server Error', error: err.message });
+    console.error("Error creating address:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
-exports.deleteAddress = async (req, res) => {
+// Update an existing address
+export const updateAddress = async (req, res) => {
+  const userId = req.user._id;
+  const addressId = req.params.id;
+  const { street, city, state, zipCode } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const address = user.address.id(addressId);
+    if (!address) return res.status(404).json({ message: "Address not found" });
+
+    address.street = street;
+    address.city = city;
+    address.state = state;
+    address.zipCode = zipCode;
+
+    await user.save();
+    res.status(200).json(address);
+  } catch (err) {
+    console.error("Error updating address:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// Delete an address
+export const deleteAddress = async (req, res) => {
+  const userId = req.user._id;
   const addressId = req.params.id;
 
   try {
-    const deletedAddress = await Address.findByIdAndDelete(addressId);
-    if (!deletedAddress) {
-      return res.status(404).json({ message: 'Address not found' });
-    }
-    return res.status(200).json({ message: 'Address deleted successfully' });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.address = user.address.filter(addr => addr._id.toString() !== addressId);
+    await user.save();
+
+    res.status(200).json({ message: "Address deleted successfully" });
   } catch (err) {
-    return res.status(500).json({ message: 'Server Error', error: err.message });
+    console.error("Error deleting address:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// Get all addresses
+export const getAddresses = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user.address);
+  } catch (err) {
+    console.error("Error fetching addresses:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };

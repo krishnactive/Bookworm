@@ -1,32 +1,21 @@
-const mongoose = require("mongoose");
+// model/address.model.js
+import mongoose from "mongoose";
 
-const addressSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Assuming you have a User model
-      required: true,
-    },
-    street: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    zipCode: {
-      type: String,
-      required: true,
-    },
+export const addressSchema = new mongoose.Schema({
+  street: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
-
-module.exports = mongoose.model("Address", addressSchema);
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  zipCode: {
+    type: String,
+    required: true,
+  },
+}, { _id: true }); // Keep _id to manage and delete individual addresses

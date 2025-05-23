@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import CartItem from "./cart.model.js"; // Import the CartItem schema
+import {addressSchema} from "./address.model.js"
 
 const userSchema = new mongoose.Schema({
   fullname: {
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   cart: [CartItem.schema], // Referencing CartItem schema
+  address:  [addressSchema],  
   myBooks: [
     {
       type: mongoose.Schema.Types.ObjectId,
