@@ -1,10 +1,7 @@
 import { useAuth } from "../context/AuthProvider";
 import { useState } from "react";
-import { FiSettings } from "react-icons/fi";
-import { MdOutlineInventory2, MdOutlineCreditCard } from "react-icons/md";
-import { FaUserAlt, FaGift, FaMobileAlt, FaHome, FaFileInvoice } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 export default function ProfilePage() {
   const [authUser, setAuthUser] = useAuth();
@@ -16,8 +13,6 @@ export default function ProfilePage() {
     email: authUser?.email || "",
     phone: authUser?.phone || "",
   });
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,80 +52,8 @@ export default function ProfilePage() {
     }
   };
 
-  const navigate = useNavigate();
-  const handleBackToHome = () => {
-    navigate("/");
-  };
-
   return (
     <div className="flex min-h-screen pt-20 bg-gray-100 dark:bg-gray-900 transition-colors">
-      {/* Mobile Settings Toggle */}
-      <div className="sm:hidden fixed top-16 left-4 z-50">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-2xl text-white bg-[#347DFA] dark:bg-blue-500 p-2 rounded-full shadow"
-        >
-          <FiSettings />
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <aside
-        className={`sm:static absolute z-40 w-full sm:w-72 bg-gradient-to-b from-[#347DFA] to-blue-600 text-white dark:from-gray-800 dark:to-gray-900 p-5 shadow-xl rounded-r-xl transition-all duration-300
-          ${sidebarOpen ? "top-20" : "-top-[1000px]"} sm:top-0`}
-      >
-        <div className="flex items-center space-x-3 mb-8">
-          <img
-            src={authUser?.profile || "https://i.pravatar.cc/100"}
-            alt="Profile"
-            className="w-12 h-12 rounded-full border-2 border-white shadow"
-          />
-          <div>
-            <p className="text-sm opacity-80">Welcome,</p>
-            <h2 className="text-lg font-bold">{authUser?.fullname || "User"}</h2>
-          </div>
-        </div>
-
-        <nav className="space-y-4 text-sm font-medium">
-          <Section title="My Orders">
-            <NavLink text="Orders" icon={<MdOutlineInventory2 />} link="/order_history" />
-          </Section>
-          <Section title="Account Settings">
-            <NavLink text="Profile Information" icon={<FaUserAlt />} active />
-            <NavLink text="Manage Addresses" icon={<FaHome />} link="/addresses" />
-            <NavLink text="PAN Card Information" icon={<FaFileInvoice />} link="/pan-info" />
-          </Section>
-          <Section title="Payments">
-            <NavLink
-              text="Gift Cards"
-              icon={<FaGift />}
-              extra={<span className="text-emerald-300 font-bold">₹0</span>}
-              link="/gift-cards"
-            />
-            <NavLink text="Saved UPI" icon={<FaMobileAlt />} link="/saved-upi" />
-            <NavLink text="Saved Cards" icon={<MdOutlineCreditCard />} link="/saved-cards" />
-          </Section>
-        </nav>
-
-        <div className="mt-10 border-t border-white/20 pt-4">
-          <button
-            onClick={handleBackToHome}
-            className="w-full text-left text-sm text-white opacity-70 hover:opacity-100 transition"
-          >
-            🏠 Back to Home
-          </button>
-        </div>
-      </aside>
-
-      {/* Backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-30"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Main Content */}
       <main className="flex-1 p-8">
         <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
@@ -179,35 +102,6 @@ export default function ProfilePage() {
         </div>
       </main>
     </div>
-  );
-}
-
-// Reusable components
-
-function Section({ title, children }) {
-  return (
-    <div>
-      <div className="text-xs uppercase tracking-wider text-white/60 mb-2 mt-6">
-        {title}
-      </div>
-      <div className="space-y-1">{children}</div>
-    </div>
-  );
-}
-
-function NavLink({ text, icon, active = false, extra, link = "#" }) {
-  const baseStyle = "flex items-center justify-between px-2 py-2 rounded transition";
-  const activeStyle = active
-    ? "bg-white/20 text-white font-semibold"
-    : "hover:bg-white/10 text-white";
-  return (
-    <Link to={link} className={`${baseStyle} ${activeStyle}`}>
-      <div className="flex items-center gap-2">
-        {icon && <span className="text-lg">{icon}</span>}
-        <span>{text}</span>
-      </div>
-      {extra}
-    </Link>
   );
 }
 
